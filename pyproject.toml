@@ -1,0 +1,32 @@
+[project]
+name = "block-puzzle-rl"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "maniaa1822", email = "manias.1822363@studenti.uniroma1.it" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "gymnasium>=1.2.0",
+    "numpy>=2.3.2",
+    "pygame>=2.6.1",
+    "stable-baselines3>=2.0.0",
+    "tensorboard>=2.15.0",
+    "pyyaml>=6.0",
+    "matplotlib>=3.8.0",
+    "tqdm>=4.66.0",
+    "sb3-contrib>=2.7.0",
+]
+
+[project.scripts]
+block-puzzle-rl = "block_puzzle_rl:main"
+block-puzzle-play = "block_puzzle_rl.visualization.human_play:run"
+block-puzzle-sudoku-play = "block_puzzle_rl.visualization.blockpuzzle_play:run"
+block-puzzle-random = "block_puzzle_rl.rl.random_agent:run_random"
+block-puzzle-train-ppo = "block_puzzle_rl.rl.train_ppo:main"
+block-puzzle-eval = "block_puzzle_rl.rl.eval_agent:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
