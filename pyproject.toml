@@ -26,6 +26,7 @@ block-puzzle-sudoku-play = "block_puzzle_rl.visualization.blockpuzzle_play:run"
 block-puzzle-random = "block_puzzle_rl.rl.random_agent:run_random"
 block-puzzle-train-ppo = "block_puzzle_rl.rl.train_ppo:main"
 block-puzzle-eval = "block_puzzle_rl.rl.eval_agent:main"
+block-puzzle-train-linear = "block_puzzle_rl.rl.train_linear_q:main"
 
 [build-system]
 requires = ["hatchling"]
