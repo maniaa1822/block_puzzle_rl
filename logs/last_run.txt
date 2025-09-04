@@ -1,0 +1,21 @@
+Using cpu device
+Logging to ./logs/ppo_seq/PPO_2
+-----------------------------
+| time/              |      |
+|    fps             | 1196 |
+|    iterations      | 1    |
+|    time_elapsed    | 3    |
+|    total_timesteps | 4096 |
+-----------------------------
+Using cpu device
+Logging to ./logs/ppo_seq/PPO_3
+---------------------------------
+| rollout/           |          |
+|    ep_len_mean     | 146      |
+|    ep_rew_mean     | 49.1     |
+| time/              |          |
+|    fps             | 2092     |
+|    iterations      | 1        |
+|    time_elapsed    | 3        |
+|    total_timesteps | 8192     |
+---------------------------------
