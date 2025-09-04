@@ -11,9 +11,12 @@ import block_puzzle_rl.env  # noqa: F401
 from block_puzzle_rl.env.wrappers import FlattenDiscreteActionWrapper, ResampleInvalidActionWrapper
 
 
-def make_env(seed: int | None = None) -> gym.Env:
-    env = gym.make("BlockPuzzle-10x10-v0")
-    env = FlattenDiscreteActionWrapper(env)
+def make_env(env_id: str, seed: int | None = None) -> gym.Env:
+    env = gym.make(env_id)
+    # Only flatten when using the MultiDiscrete placement env
+    if env_id == "BlockPuzzle-10x10-v0":
+        env = FlattenDiscreteActionWrapper(env)
+    # Resample invalid actions for vanilla PPO; also forwards get_action_mask
     env = ResampleInvalidActionWrapper(env)
     if seed is not None:
         env.reset(seed=seed)
@@ -23,6 +26,8 @@ def make_env(seed: int | None = None) -> gym.Env:
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser()
     p.add_argument("--algo", choices=["ppo", "maskable"], default="ppo")
+    p.add_argument("--env", choices=["default", "sequential"], default="sequential",
+                   help="Which environment to train: default (MultiDiscrete) or sequential (11-action)")
     p.add_argument("--timesteps", type=int, default=200_000)
     p.add_argument("--logdir", type=str, default="./logs/ppo")
     p.add_argument("--save_path", type=str, default="./models/ppo_blockpuzzle.zip")
@@ -32,6 +37,8 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main() -> None:
     args = build_parser().parse_args()
+
+    env_id = "BlockPuzzleSequential-10x10-v0" if args.env == "sequential" else "BlockPuzzle-10x10-v0"
 
     if args.algo == "maskable":
         # sb3-contrib MaskablePPO
@@ -44,7 +51,7 @@ def main() -> None:
 
         def make_env_idx(i: int):
             def thunk():
-                e = make_env()
+                e = make_env(env_id)
                 e = ActionMasker(e, mask_fn)
                 return e
             return thunk
@@ -66,7 +73,7 @@ def main() -> None:
 
         def make_env_idx(i: int):
             def thunk():
-                return make_env()
+                return make_env(env_id)
             return thunk
 
         vec_env = SubprocVecEnv([make_env_idx(i) for i in range(args.n_envs)])
