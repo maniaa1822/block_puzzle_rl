@@ -61,8 +61,14 @@ class ResampleInvalidActionWrapper(gym.Wrapper):
 
     # Delegate mask access if the wrapped env provides it
     def get_action_mask(self) -> np.ndarray:  # type: ignore[override]
+        # Some default Gymnasium wrappers (e.g., TimeLimit/OrderEnforcing) may
+        # not forward custom attributes like `get_action_mask`. In those cases,
+        # fall back to the base environment via `unwrapped`.
         if hasattr(self.env, "get_action_mask"):
             return getattr(self.env, "get_action_mask")()
+        base = getattr(self.env, "unwrapped", None)
+        if base is not None and hasattr(base, "get_action_mask"):
+            return getattr(base, "get_action_mask")()
         raise AttributeError("Underlying env does not provide get_action_mask")
 
 
